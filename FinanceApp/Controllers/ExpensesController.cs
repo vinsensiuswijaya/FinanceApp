@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FinanceApp.Data;
 using FinanceApp.Data.Service;
 using FinanceApp.Models;
@@ -30,6 +31,36 @@ namespace FinanceApp.Controllers
             {
                 await _expensesService.Add(expense);
 
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var expense = await _expensesService.GetExpenseById(id);
+            if (expense == null)
+                return NotFound();
+            return View(expense);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(Expense expense)
+        {
+            if (ModelState.IsValid)
+            {
+                await _expensesService.Edit(expense);
+
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                await _expensesService.Delete(id);
                 return RedirectToAction("Index");
             }
             return View();

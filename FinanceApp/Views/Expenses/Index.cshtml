@@ -2,23 +2,33 @@
 
 <h2>My Expenses</h2>
 <div class="container">
+    <a asp-action="Create" class="btn btn-success">Add New Expense</a>
     <table class="table table-bordered">
         <thead class="table-light">
             <tr>
+                @* <th>ID</th> *@
                 <th>Description</th>
                 <th>Amount</th>
                 <th>Category</th>
                 <th>Date</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
+                    @* <td>@item.Id</td> *@
                     <td>@item.Description</td>
                     <td>@item.Amount $</td>
                     <td>@item.Category</td>
                     <td>@item.Date.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                        <form asp-action="Delete" asp-route-itemid="@item.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
