@@ -58,6 +58,7 @@ namespace FinanceApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
+            Console.WriteLine($"DELETE ID: {id}");
             if (ModelState.IsValid)
             {
                 await _expensesService.Delete(id);

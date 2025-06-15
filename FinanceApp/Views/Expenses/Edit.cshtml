@@ -1,20 +1,11 @@
 @model FinanceApp.Models.Expense
 
+@{
+    ViewData["Action"] = "Edit";
+    ViewData["ButtonText"] = "Save Changes";
+}
+
 <div class="container">
     <h2>Edit Expense</h2>
-    <form asp-action="Edit" method="post">
-        <div>
-            <label asp-for="Description" class="form-label"></label>
-            <input asp-for="Description" class="form-control"/>
-        </div>
-        <div>
-            <label asp-for="Amount" class="form-label"></label>
-            <input asp-for="Amount" class="form-control"/>
-        </div>
-        <div>
-            <label asp-for="Category" class="form-label"></label>
-            <input asp-for="Category" class="form-control"/>
-        </div>
-        <button type="submit" class="btn btn-primary">Edit Expense</button>
-    </form>
+    @await Html.PartialAsync("_ExpenseForm", Model)
 </div>
