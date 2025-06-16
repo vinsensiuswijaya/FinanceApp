@@ -36,7 +36,7 @@ namespace FinanceApp.Controllers
             {
                 await _expensesService.AddAsync(expenseDto);
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
@@ -56,7 +56,7 @@ namespace FinanceApp.Controllers
             {
                 await _expensesService.EditAsync(expenseDto);
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
@@ -64,12 +64,8 @@ namespace FinanceApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
-            {
-                await _expensesService.Delete(id);
-                return RedirectToAction("Index");
-            }
-            return View();
+            await _expensesService.Delete(id);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> GetChart()

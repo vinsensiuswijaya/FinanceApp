@@ -10,10 +10,12 @@ namespace FinanceApp.Services
     public class ExpensesService : IExpensesService
     {
         private readonly IMapper _mapper;
+        private readonly FinanceAppContext _context;
         private IExpenseRepository _expenseRepository;
 
         public ExpensesService(FinanceAppContext context, IMapper mapper)
         {
+            _context = context;
             _mapper = mapper;
             _expenseRepository = new ExpenseRepository(context);
         }
@@ -32,6 +34,7 @@ namespace FinanceApp.Services
             }
 
             await _expenseRepository.AddAsync(expense);
+            await _context.SaveChangesAsync();
         }
 
         public async Task EditAsync(ExpenseDTO updatedExpenseDto)
@@ -46,7 +49,9 @@ namespace FinanceApp.Services
             else
                 existingExpense.Date = existingExpense.Date.ToUniversalTime();
 
-            await _expenseRepository.UpdateAsync(existingExpense);
+            _expenseRepository.Update(existingExpense);
+            await _context.SaveChangesAsync();
+
         }
 
         public async Task Delete(int id)
@@ -54,7 +59,8 @@ namespace FinanceApp.Services
             var expense = await _expenseRepository.GetByIdAsync(id);
             if (expense != null)
             {
-                await _expenseRepository.RemoveAsync(expense);
+                _expenseRepository.Remove(expense);
+                await _context.SaveChangesAsync();
             }
         }
 

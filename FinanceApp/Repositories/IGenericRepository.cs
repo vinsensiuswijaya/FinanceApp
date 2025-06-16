@@ -11,7 +11,7 @@ namespace FinanceApp.Repositories
         Task AddRangeAsync(IEnumerable<T> entities);
         void Update(T entity);
         void Remove(T entity);
-        Task UpdateAsync(T entity);
-        Task RemoveAsync(T entity);
+        // Task UpdateAsync(T entity);
+        // Task RemoveAsync(T entity);
     }
 }
