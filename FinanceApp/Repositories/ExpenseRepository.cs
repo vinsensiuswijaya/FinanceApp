@@ -10,7 +10,7 @@ namespace FinanceApp.Repositories
     {
         public ExpenseRepository(FinanceAppContext context) : base(context) { }
 
-        public async Task<IEnumerable<ExpenseChartDataDTO>> GetChartData()
+        public async Task<IEnumerable<ExpenseChartDataDTO>> GetChartDataAsync()
         {
             var data = await _context.Expenses
                                      .GroupBy(e => e.Category)

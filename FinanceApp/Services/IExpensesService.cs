@@ -8,13 +8,13 @@ namespace FinanceApp.Services
         // CREATE
         Task AddAsync(ExpenseDTO expenseDto);
         // READ
-        Task<IEnumerable<ExpenseDTO>> GetAll();
-        Task<ExpenseDTO> GetExpenseById(int id);
+        Task<IEnumerable<ExpenseDTO>> GetAllAsync();
+        Task<ExpenseDTO> GetByIdAsync(int id);
         // UPDATE
         Task EditAsync(ExpenseDTO expenseDto);
         // DELETE
-        Task Delete(int id);
+        Task DeleteAsync(int id);
 
-        Task<IEnumerable<ExpenseChartDataDTO>> GetChartData();
+        Task<IEnumerable<ExpenseChartDataDTO>> GetChartDataAsync();
     }
 }

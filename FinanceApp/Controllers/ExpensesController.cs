@@ -20,7 +20,7 @@ namespace FinanceApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var expenses = await _expensesService.GetAll();
+            var expenses = await _expensesService.GetAllAsync();
             return View(expenses);
         }
 
@@ -38,12 +38,12 @@ namespace FinanceApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            return View(expenseDto);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var expenseDto = await _expensesService.GetExpenseById(id);
+            var expenseDto = await _expensesService.GetByIdAsync(id);
             if (expenseDto == null)
                 return NotFound();
             return View(expenseDto);
@@ -58,19 +58,19 @@ namespace FinanceApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            return View(expenseDto);
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await _expensesService.Delete(id);
+            await _expensesService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> GetChart()
         {
-            var data = await _expensesService.GetChartData();
+            var data = await _expensesService.GetChartDataAsync();
             return Json(data);
         }
     }

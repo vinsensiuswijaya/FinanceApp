@@ -30,6 +30,7 @@ builder.Services.AddTransient<IValidator<Expense>, ExpenseValidator>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddScoped<IExpensesService, ExpensesService>();
+builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 
 var app = builder.Build();
 

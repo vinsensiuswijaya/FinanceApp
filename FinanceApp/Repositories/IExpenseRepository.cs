@@ -5,6 +5,6 @@ namespace FinanceApp.Repositories
 {
     public interface IExpenseRepository : IGenericRepository<Expense>
     {
-        public Task<IEnumerable<ExpenseChartDataDTO>> GetChartData();
+        public Task<IEnumerable<ExpenseChartDataDTO>> GetChartDataAsync();
     }
 }

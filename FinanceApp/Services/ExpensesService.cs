@@ -51,10 +51,9 @@ namespace FinanceApp.Services
 
             _expenseRepository.Update(existingExpense);
             await _context.SaveChangesAsync();
-
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var expense = await _expenseRepository.GetByIdAsync(id);
             if (expense != null)
@@ -64,21 +63,21 @@ namespace FinanceApp.Services
             }
         }
 
-        public async Task<IEnumerable<ExpenseDTO>> GetAll()
+        public async Task<IEnumerable<ExpenseDTO>> GetAllAsync()
         {
             var expenses = await _expenseRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
         }
 
-        public async Task<ExpenseDTO> GetExpenseById(int id)
+        public async Task<ExpenseDTO> GetByIdAsync(int id)
         {
             var expense = await _expenseRepository.GetByIdAsync(id);
             return expense == null ? null : _mapper.Map<ExpenseDTO>(expense);
         }
 
-        public async Task<IEnumerable<ExpenseChartDataDTO>> GetChartData()
+        public async Task<IEnumerable<ExpenseChartDataDTO>> GetChartDataAsync()
         {
-            var data = await _expenseRepository.GetChartData();
+            var data = await _expenseRepository.GetChartDataAsync();
             return data;
         }
     }
