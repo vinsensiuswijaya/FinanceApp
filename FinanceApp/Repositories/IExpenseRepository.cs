@@ -1,9 +1,9 @@
-using FinanceApp.Models;
+using FinanceApp.Dtos;
 
 namespace FinanceApp.Repositories
 {
-    public interface IEXpenseRepository : IGenericRepository<Expense>
+    public interface IExpenseRepository : IGenericRepository<ExpenseDTO>
     {
-        
+        public Task<IEnumerable<ExpenseChartDataDTO>> GetChartData();
     }
 }

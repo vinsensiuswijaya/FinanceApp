@@ -3,7 +3,7 @@ using FinanceApp.Data;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using FinanceApp.Dtos;
-using System.Threading.Tasks;
+using FinanceApp.Repositories;
 
 namespace FinanceApp.Services
 {
@@ -11,11 +11,13 @@ namespace FinanceApp.Services
     {
         private readonly FinanceAppContext _context;
         private readonly IMapper _mapper;
+        private IExpenseRepository _expenseRepository;
 
         public ExpensesService(FinanceAppContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+            _expenseRepository = new ExpenseRepository(context, mapper);
         }
         public async Task Add(ExpenseDTO expenseDto)
         {
@@ -60,28 +62,20 @@ namespace FinanceApp.Services
 
         public async Task<IEnumerable<ExpenseDTO>> GetAll()
         {
-            var expenses = await _context.Expenses
-                                         .OrderBy(e => e.Date)
-                                         .ToListAsync();
-            return _mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
+            var expenses = await _expenseRepository.GetAllAsync();
+            return expenses;
         }
 
         public async Task<ExpenseDTO> GetExpenseById(int id)
         {
-            var expense = await _context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
-            return expense == null ? null : _mapper.Map<ExpenseDTO>(expense);
+            var expense = await _expenseRepository.GetByIdAsync(id);
+
+            return expense;
         }
 
         public async Task<IEnumerable<ExpenseChartDataDTO>> GetChartData()
         {
-            var data = await _context.Expenses
-                .GroupBy(e => e.Category)
-                .Select(g => new ExpenseChartDataDTO
-                {
-                    Category = g.Key,
-                    Total = g.Sum(e => e.Amount)
-                })
-                .ToListAsync();
+            var data = await _expenseRepository.GetChartData();
 
             return data;
         }
