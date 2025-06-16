@@ -34,7 +34,7 @@ namespace FinanceApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _expensesService.Add(expenseDto);
+                await _expensesService.AddAsync(expenseDto);
 
                 return RedirectToAction("Index");
             }
@@ -54,7 +54,7 @@ namespace FinanceApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _expensesService.Edit(expenseDto);
+                await _expensesService.EditAsync(expenseDto);
 
                 return RedirectToAction("Index");
             }

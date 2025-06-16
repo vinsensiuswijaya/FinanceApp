@@ -16,14 +16,16 @@ namespace FinanceApp.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task AddAsync(T entity)
         {
-            return await _dbSet.ToListAsync();
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<T?> GetByIdAsync(int id)
+        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
         {
-            return await _dbSet.FindAsync(id);
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
@@ -31,24 +33,38 @@ namespace FinanceApp.Repositories
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public virtual async Task AddAsync(T entity)
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            await _dbSet.AddAsync(entity);
+            return await _dbSet.ToListAsync();
         }
 
-        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
+        public virtual async Task<T> GetByIdAsync(int id)
         {
-            await _dbSet.AddRangeAsync(entities);
+            return await _dbSet.FindAsync(id);
         }
 
         public virtual void Update(T entity)
         {
             _dbSet.Update(entity);
+            _context.SaveChanges();
         }
 
         public virtual void Remove(T entity)
         {
             _dbSet.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveAsync(T entity)
+        {
+            Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

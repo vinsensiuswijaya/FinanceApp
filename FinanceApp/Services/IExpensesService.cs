@@ -6,12 +6,12 @@ namespace FinanceApp.Services
     public interface IExpensesService
     {
         // CREATE
-        Task Add(ExpenseDTO expenseDto);
+        Task AddAsync(ExpenseDTO expenseDto);
         // READ
         Task<IEnumerable<ExpenseDTO>> GetAll();
         Task<ExpenseDTO> GetExpenseById(int id);
         // UPDATE
-        Task Edit(ExpenseDTO expenseDto);
+        Task EditAsync(ExpenseDTO expenseDto);
         // DELETE
         Task Delete(int id);
 

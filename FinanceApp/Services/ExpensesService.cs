@@ -9,17 +9,16 @@ namespace FinanceApp.Services
 {
     public class ExpensesService : IExpensesService
     {
-        private readonly FinanceAppContext _context;
         private readonly IMapper _mapper;
         private IExpenseRepository _expenseRepository;
 
         public ExpensesService(FinanceAppContext context, IMapper mapper)
         {
-            _context = context;
             _mapper = mapper;
-            _expenseRepository = new ExpenseRepository(context, mapper);
+            _expenseRepository = new ExpenseRepository(context);
         }
-        public async Task Add(ExpenseDTO expenseDto)
+
+        public async Task AddAsync(ExpenseDTO expenseDto)
         {
             expenseDto.Date = DateTime.Now;
             var expense = _mapper.Map<Expense>(expenseDto);
@@ -31,13 +30,13 @@ namespace FinanceApp.Services
             {
                 expense.Date = expense.Date.ToUniversalTime();
             }
-            _context.Expenses.Add(expense);
-            await _context.SaveChangesAsync();
+
+            await _expenseRepository.AddAsync(expense);
         }
 
-        public async Task Edit(ExpenseDTO updatedExpenseDto)
+        public async Task EditAsync(ExpenseDTO updatedExpenseDto)
         {
-            var existingExpense = await _context.Expenses.FindAsync(updatedExpenseDto.Id);
+            var existingExpense = await _expenseRepository.GetByIdAsync(updatedExpenseDto.Id);
             updatedExpenseDto.Date = existingExpense.Date;
 
             _mapper.Map(updatedExpenseDto, existingExpense);
@@ -45,38 +44,35 @@ namespace FinanceApp.Services
             if (existingExpense.Date.Kind == DateTimeKind.Unspecified)
                 existingExpense.Date = DateTime.SpecifyKind(existingExpense.Date, DateTimeKind.Local).ToUniversalTime();
             else
-                existingExpense.Date = existingExpense.Date.ToUniversalTime();           
+                existingExpense.Date = existingExpense.Date.ToUniversalTime();
 
-            await _context.SaveChangesAsync();
+            await _expenseRepository.UpdateAsync(existingExpense);
         }
 
         public async Task Delete(int id)
         {
-            var expense = await _context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
+            var expense = await _expenseRepository.GetByIdAsync(id);
             if (expense != null)
             {
-                _context.Expenses.Remove(expense);
-                await _context.SaveChangesAsync();
+                await _expenseRepository.RemoveAsync(expense);
             }
         }
 
         public async Task<IEnumerable<ExpenseDTO>> GetAll()
         {
             var expenses = await _expenseRepository.GetAllAsync();
-            return expenses;
+            return _mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
         }
 
         public async Task<ExpenseDTO> GetExpenseById(int id)
         {
             var expense = await _expenseRepository.GetByIdAsync(id);
-
-            return expense;
+            return expense == null ? null : _mapper.Map<ExpenseDTO>(expense);
         }
 
         public async Task<IEnumerable<ExpenseChartDataDTO>> GetChartData()
         {
             var data = await _expenseRepository.GetChartData();
-
             return data;
         }
     }
