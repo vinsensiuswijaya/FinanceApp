@@ -21,10 +21,37 @@ namespace FinanceApp.Controllers
             _categoriesService = categoriesService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder = "date")
         {
+            ViewData["DescriptionSortParm"] = String.IsNullOrEmpty(sortOrder) ? "description" : "";
+            ViewData["AmountSortParm"] = sortOrder == "amount" ? "amount_desc" : "amount";
+            ViewData["DateSortParm"] = sortOrder == "date" ? "date_desc" : "date";
+
             var expenses = await _expensesService.GetAllAsync();
-            expenses = expenses.OrderBy(e => e.Id);
+            switch (sortOrder)
+            {
+                case "description_desc":
+                    expenses = expenses.OrderByDescending(e => e.Description);
+                    break;
+                case "description":
+                    expenses = expenses.OrderBy(e => e.Description);
+                    break;
+                case "amount_desc":
+                    expenses = expenses.OrderByDescending(e => e.Amount);
+                    break;
+                case "amount":
+                    expenses = expenses.OrderBy(e => e.Amount);
+                    break;
+                case "date":
+                    expenses = expenses.OrderBy(e => e.Date);
+                    break;
+                case "date_desc":
+                    expenses = expenses.OrderByDescending(e => e.Date);
+                    break;
+                default:
+                    expenses = expenses.OrderBy(e => e.Id);
+                    break;
+            }
             return View(expenses);
         }
 

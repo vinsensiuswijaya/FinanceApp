@@ -51,12 +51,8 @@ namespace FinanceApp.Controllers
         }
 
         [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Edit(int id, CategoryDTO categoryDto)
         public async Task<IActionResult> Edit(CategoryDTO categoryDto)
         {
-            // if (id != categoryDto.Id)
-            //     return NotFound();
             if (ModelState.IsValid)
             {
                 await _categoriesService.EditAsync(categoryDto);
@@ -65,16 +61,7 @@ namespace FinanceApp.Controllers
             return View(categoryDto);
         }
 
-        // public async Task<IActionResult> Delete(int id)
-        // {
-        //     var category = await _categoriesService.GetByIdAsync(id);
-        //     if (category == null)
-        //         return NotFound();
-        //     return View(category);
-        // }
-
         [HttpPost]
-        // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             await _categoriesService.DeleteAsync(id);
