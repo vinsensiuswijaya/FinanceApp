@@ -24,6 +24,7 @@ namespace FinanceApp.Controllers
         public async Task<IActionResult> Index()
         {
             var expenses = await _expensesService.GetAllAsync();
+            expenses = expenses.OrderBy(e => e.Id);
             return View(expenses);
         }
 
@@ -31,7 +32,12 @@ namespace FinanceApp.Controllers
         {
             var categories = await _categoriesService.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            return View();
+
+            var model = new ExpenseDTO
+            {
+                Date = DateTime.Today
+            };
+            return View(model);
         }
 
         [HttpPost]
@@ -53,6 +59,8 @@ namespace FinanceApp.Controllers
             var expenseDto = await _expensesService.GetByIdAsync(id);
             if (expenseDto == null)
                 return NotFound();
+
+            expenseDto.Date = expenseDto.Date.ToLocalTime();
 
             var categories = await _categoriesService.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", expenseDto.CategoryId);

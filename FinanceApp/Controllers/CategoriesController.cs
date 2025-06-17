@@ -19,6 +19,7 @@ namespace FinanceApp.Controllers
         public async Task<IActionResult> Index()
         {
             var categories = await _categoriesService.GetAllAsync();
+            categories = categories.OrderBy(c => c.Id);
             return View(categories);
         }
 
@@ -28,11 +29,14 @@ namespace FinanceApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CategoryDTO categoryDto)
+        public async Task<IActionResult> Create(CategoryDTO categoryDto, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
                 await _categoriesService.AddAsync(categoryDto);
+
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(returnUrl);
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryDto);
@@ -61,17 +65,17 @@ namespace FinanceApp.Controllers
             return View(categoryDto);
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            var category = await _categoriesService.GetByIdAsync(id);
-            if (category == null)
-                return NotFound();
-            return View(category);
-        }
+        // public async Task<IActionResult> Delete(int id)
+        // {
+        //     var category = await _categoriesService.GetByIdAsync(id);
+        //     if (category == null)
+        //         return NotFound();
+        //     return View(category);
+        // }
 
         [HttpPost]
         // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             await _categoriesService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));

@@ -5,6 +5,7 @@ using FinanceApp.Data;
 using FinanceApp.Services;
 using FinanceApp.Models;
 using FinanceApp.Validators;
+using FinanceApp.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,8 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
 // Register FluentValidation validators
-builder.Services.AddTransient<IValidator<Expense>, ExpenseValidator>();
+builder.Services.AddTransient<IValidator<ExpenseDTO>, ExpenseValidator>();
+builder.Services.AddTransient<IValidator<CategoryDTO>, CategoryValidator>();
 
 // Register AutoMapper with all profiles
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

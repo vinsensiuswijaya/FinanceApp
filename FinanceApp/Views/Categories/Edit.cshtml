@@ -1,19 +1,11 @@
 @model FinanceApp.Dtos.CategoryDTO
 
 @{
-    ViewData["Title"] = "Edit Category";
+    ViewData["Action"] = "Edit";
+    ViewData["ButtonText"] = "Save";
 }
 
-<h2>Edit Category</h2>
-
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-</form>
+<div class="container">
+    <h2>Edit Category</h2>
+    @await Html.PartialAsync("_CategoriesForm", Model)
+</div>

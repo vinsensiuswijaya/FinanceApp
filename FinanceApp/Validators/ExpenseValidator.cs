@@ -1,9 +1,9 @@
 using FluentValidation;
-using FinanceApp.Models;
+using FinanceApp.Dtos;
 
 namespace FinanceApp.Validators
 {
-    public class ExpenseValidator : AbstractValidator<Expense>
+    public class ExpenseValidator : AbstractValidator<ExpenseDTO>
     {
         public ExpenseValidator()
         {

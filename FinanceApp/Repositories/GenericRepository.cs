@@ -50,15 +50,5 @@ namespace FinanceApp.Repositories
         {
             _dbSet.Remove(entity);
         }
-
-        // public async Task UpdateAsync(T entity)
-        // {
-        //     Update(entity);
-        // }
-
-        // public async Task RemoveAsync(T entity)
-        // {
-        //     Remove(entity);
-        // }
     }
 }

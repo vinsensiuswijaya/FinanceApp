@@ -1,0 +1,17 @@
+@model FinanceApp.Dtos.CategoryDTO;
+
+<form asp-action="@ViewData["Action"]" method="post">
+    <div>
+        <input type="hidden" name="returnUrl" value="@Context.Request.Query["returnUrl"]" />
+        <label asp-for="Name" class="form-label">Name</label>
+        <input asp-for="Name" class="form-control">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="btn-group mt-3" role="group">
+        <button type="submit" class="btn btn-primary">@ViewData["ButtonText"]</button>
+        <a class="btn btn-secondary"
+            href="@(string.IsNullOrEmpty(Context.Request.Query["returnUrl"]) ? Url.Action("Index") : Context.Request.Query["returnUrl"])">
+            Cancel
+        </a>
+    </div>
+</form>

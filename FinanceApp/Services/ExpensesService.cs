@@ -22,7 +22,6 @@ namespace FinanceApp.Services
 
         public async Task AddAsync(ExpenseDTO expenseDto)
         {
-            expenseDto.Date = DateTime.Now;
             var expense = _mapper.Map<Expense>(expenseDto);
             if (expense.Date.Kind == DateTimeKind.Unspecified)
             {
@@ -40,7 +39,6 @@ namespace FinanceApp.Services
         public async Task EditAsync(ExpenseDTO updatedExpenseDto)
         {
             var existingExpense = await _expenseRepository.GetByIdAsync(updatedExpenseDto.Id);
-            updatedExpenseDto.Date = existingExpense.Date;
 
             _mapper.Map(updatedExpenseDto, existingExpense);
 
