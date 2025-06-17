@@ -8,8 +8,10 @@ namespace FinanceApp.MappingProfiles
     {
         public ExpenseMappingProfile()
         {
-            CreateMap<Expense, ExpenseDTO>();
-            CreateMap<ExpenseDTO, Expense>();
+            CreateMap<Expense, ExpenseDTO>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+            CreateMap<ExpenseDTO, Expense>()
+                .ForMember(dest => dest.Category, opt => opt.Ignore());
         }
     }
 }

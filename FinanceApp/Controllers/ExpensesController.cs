@@ -6,16 +6,19 @@ using FinanceApp.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FinanceApp.Controllers
 {
     public class ExpensesController : Controller
     {
         private readonly IExpensesService _expensesService;
-        
-        public ExpensesController(IExpensesService expensesService)
+        private readonly ICategoriesService _categoriesService;
+
+        public ExpensesController(IExpensesService expensesService, ICategoriesService categoriesService)
         {
             _expensesService = expensesService;
+            _categoriesService = categoriesService;
         }
 
         public async Task<IActionResult> Index()
@@ -24,8 +27,10 @@ namespace FinanceApp.Controllers
             return View(expenses);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var categories = await _categoriesService.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View();
         }
 
@@ -38,6 +43,8 @@ namespace FinanceApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            var categories = await _categoriesService.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", expenseDto.CategoryId);
             return View(expenseDto);
         }
 
@@ -46,6 +53,9 @@ namespace FinanceApp.Controllers
             var expenseDto = await _expensesService.GetByIdAsync(id);
             if (expenseDto == null)
                 return NotFound();
+
+            var categories = await _categoriesService.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", expenseDto.CategoryId);
             return View(expenseDto);
         }
         
@@ -58,6 +68,8 @@ namespace FinanceApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            var categories = await _categoriesService.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", expenseDto.CategoryId);
             return View(expenseDto);
         }
 
