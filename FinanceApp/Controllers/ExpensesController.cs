@@ -27,7 +27,7 @@ namespace FinanceApp.Controllers
             ViewData["AmountSortParm"] = sortOrder == "amount" ? "amount_desc" : "amount";
             ViewData["DateSortParm"] = sortOrder == "date" ? "date_desc" : "date";
 
-            var expenses = await _expensesService.GetAllAsync();
+            var expenses = await _expensesService.GetAll();
             switch (sortOrder)
             {
                 case "description_desc":

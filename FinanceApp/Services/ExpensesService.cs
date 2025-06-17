@@ -61,7 +61,7 @@ namespace FinanceApp.Services
             }
         }
 
-        public async Task<IEnumerable<ExpenseDTO>> GetAllAsync()
+        public async Task<IEnumerable<ExpenseDTO>> GetAll()
         {
             var expenses = await _expenseRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
