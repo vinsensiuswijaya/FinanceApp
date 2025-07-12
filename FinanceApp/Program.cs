@@ -15,9 +15,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add MVC services
 builder.Services.AddControllersWithViews();
 
-// Configure PostgreSQL database
-builder.Services.AddDbContext<FinanceAppContext>(options =>
-options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Configure database
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<FinanceAppContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
+else
+{
+    builder.Services.AddDbContext<FinanceAppContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 // Configure Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => {
