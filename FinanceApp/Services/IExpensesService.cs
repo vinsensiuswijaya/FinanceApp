@@ -6,15 +6,15 @@ namespace FinanceApp.Services
     public interface IExpensesService
     {
         // CREATE
-        Task AddAsync(ExpenseDTO expenseDto);
+        Task AddAsync(ExpenseDTO expenseDto, string userId);
         // READ
-        Task<IEnumerable<ExpenseDTO>> GetAll();
-        Task<ExpenseDTO> GetByIdAsync(int id);
+        Task<IEnumerable<ExpenseDTO>> GetAllByUserIdAsync(string userId);
+        Task<ExpenseDTO> GetByIdAsync(int id, string userId);
         // UPDATE
-        Task EditAsync(ExpenseDTO expenseDto);
+        Task EditAsync(ExpenseDTO expenseDto, string userId);
         // DELETE
-        Task DeleteAsync(int id);
+        Task DeleteAsync(int id, string userId);
 
-        Task<IEnumerable<ExpenseChartDataDTO>> GetChartDataAsync();
+        Task<IEnumerable<ExpenseChartDataDTO>> GetChartDataByUserIdAsync(string userId);
     }
 }
