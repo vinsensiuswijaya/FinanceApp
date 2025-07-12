@@ -4,9 +4,11 @@ using FinanceApp.Data;
 using FinanceApp.Models;
 using FinanceApp.Services;
 using FinanceApp.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FinanceApp.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly ICategoriesService _categoriesService;
