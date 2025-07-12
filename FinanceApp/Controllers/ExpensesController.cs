@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FinanceApp.Controllers
 {
@@ -23,13 +24,19 @@ namespace FinanceApp.Controllers
             _categoriesService = categoriesService;
         }
 
+        private string GetCurrentUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        }
+
         public async Task<IActionResult> Index(string sortOrder = "date")
         {
             ViewData["DescriptionSortParm"] = String.IsNullOrEmpty(sortOrder) ? "description" : "";
             ViewData["AmountSortParm"] = sortOrder == "amount" ? "amount_desc" : "amount";
             ViewData["DateSortParm"] = sortOrder == "date" ? "date_desc" : "date";
 
-            var expenses = await _expensesService.GetAll();
+            var userId = GetCurrentUserId();
+            var expenses = await _expensesService.GetAllByUserIdAsync(userId);
             switch (sortOrder)
             {
                 case "description_desc":
@@ -59,7 +66,8 @@ namespace FinanceApp.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var categories = await _categoriesService.GetAllAsync();
+            var userId = GetCurrentUserId();
+            var categories = await _categoriesService.GetAllByUserIdAsync(userId);
             ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
             var model = new ExpenseDTO
@@ -74,24 +82,27 @@ namespace FinanceApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _expensesService.AddAsync(expenseDto);
+                var userId = GetCurrentUserId();
+                await _expensesService.AddAsync(expenseDto, userId);
 
                 return RedirectToAction(nameof(Index));
             }
-            var categories = await _categoriesService.GetAllAsync();
+            var userId2 = GetCurrentUserId();
+            var categories = await _categoriesService.GetAllByUserIdAsync(userId2);
             ViewBag.Categories = new SelectList(categories, "Id", "Name", expenseDto.CategoryId);
             return View(expenseDto);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var expenseDto = await _expensesService.GetByIdAsync(id);
+            var userId = GetCurrentUserId();
+            var expenseDto = await _expensesService.GetByIdAsync(id, userId);
             if (expenseDto == null)
                 return NotFound();
 
             expenseDto.Date = expenseDto.Date.ToLocalTime();
 
-            var categories = await _categoriesService.GetAllAsync();
+            var categories = await _categoriesService.GetAllByUserIdAsync(userId);
             ViewBag.Categories = new SelectList(categories, "Id", "Name", expenseDto.CategoryId);
             return View(expenseDto);
         }
@@ -101,11 +112,13 @@ namespace FinanceApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _expensesService.EditAsync(expenseDto);
+                var userId = GetCurrentUserId();
+                await _expensesService.EditAsync(expenseDto, userId);
 
                 return RedirectToAction(nameof(Index));
             }
-            var categories = await _categoriesService.GetAllAsync();
+            var userId2 = GetCurrentUserId();
+            var categories = await _categoriesService.GetAllByUserIdAsync(userId2);
             ViewBag.Categories = new SelectList(categories, "Id", "Name", expenseDto.CategoryId);
             return View(expenseDto);
         }
@@ -113,13 +126,15 @@ namespace FinanceApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await _expensesService.DeleteAsync(id);
+            var userId = GetCurrentUserId();
+            await _expensesService.DeleteAsync(id, userId);
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> GetChart()
         {
-            var data = await _expensesService.GetChartDataAsync();
+            var userId = GetCurrentUserId();
+            var data = await _expensesService.GetChartDataByUserIdAsync(userId);
             return Json(data);
         }
     }

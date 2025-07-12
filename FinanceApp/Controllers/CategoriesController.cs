@@ -5,6 +5,7 @@ using FinanceApp.Models;
 using FinanceApp.Services;
 using FinanceApp.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FinanceApp.Controllers
 {
@@ -18,9 +19,15 @@ namespace FinanceApp.Controllers
             _categoriesService = categoriesService;
         }
 
+        private string GetCurrentUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        }
+
         public async Task<IActionResult> Index()
         {
-            var categories = await _categoriesService.GetAllAsync();
+            var userId = GetCurrentUserId();
+            var categories = await _categoriesService.GetAllByUserIdAsync(userId);
             categories = categories.OrderBy(c => c.Id);
             return View(categories);
         }
@@ -35,7 +42,8 @@ namespace FinanceApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _categoriesService.AddAsync(categoryDto);
+                var userId = GetCurrentUserId();
+                await _categoriesService.AddAsync(categoryDto, userId);
 
                 if (!string.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
@@ -46,7 +54,8 @@ namespace FinanceApp.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var category = await _categoriesService.GetByIdAsync(id);
+            var userId = GetCurrentUserId();
+            var category = await _categoriesService.GetByIdAsync(id, userId);
             if (category == null)
                 return NotFound();
             return View(category);
@@ -57,7 +66,8 @@ namespace FinanceApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _categoriesService.EditAsync(categoryDto);
+                var userId = GetCurrentUserId();
+                await _categoriesService.EditAsync(categoryDto, userId);
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryDto);
@@ -66,7 +76,8 @@ namespace FinanceApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await _categoriesService.DeleteAsync(id);
+            var userId = GetCurrentUserId();
+            await _categoriesService.DeleteAsync(id, userId);
             return RedirectToAction(nameof(Index));
         }
     }

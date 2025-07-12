@@ -8,5 +8,6 @@ namespace FinanceApp.Models
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
+        public string UserId { get; set; } = null!;
     }
 }
